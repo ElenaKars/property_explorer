@@ -343,6 +343,81 @@ a {
   font-weight: 550;
 }
 
+.note {
+  margin-top: 10px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  color: #78350f;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+}
+
+/* ---------- Legend ---------- */
+
+.legend {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.8rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend__swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid;
+  border-radius: 3px;
+  opacity: 0.85;
+}
+
+.legend__swatch--dashed {
+  border-style: dashed;
+}
+
+/* ---------- Building popup ---------- */
+
+.building-popup {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.building-popup__title {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.building-popup dl {
+  margin: 0 0 6px;
+  display: grid;
+  gap: 2px;
+}
+
+.building-popup dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.building-popup dt {
+  color: var(--text-muted);
+}
+
+.building-popup dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Drawing mode ---------- */
 
 .leaflet-container:focus-visible {

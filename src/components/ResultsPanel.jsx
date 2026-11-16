@@ -1,4 +1,15 @@
 import { formatArea, formatCount, formatPercent, formatTimestamp } from '../lib/format.js';
+import { BUILDING_COLORS } from '../lib/mapStyles.js';
+
+function LegendSwatch({ colors, dashed = false }) {
+  return (
+    <span
+      className={`legend__swatch${dashed ? ' legend__swatch--dashed' : ''}`}
+      style={{ borderColor: colors.stroke, background: dashed ? 'transparent' : colors.fill }}
+      aria-hidden="true"
+    />
+  );
+}
 
 export default function ResultsPanel({ selection, buildings, analysis }) {
   if (!selection || selection.error) return null;
@@ -51,6 +62,36 @@ export default function ResultsPanel({ selection, buildings, analysis }) {
               {analysis.skipped > 0 &&
                 ` ${formatCount(analysis.skipped, 'outline')} skipped because the OSM geometry is incomplete.`}
             </p>
+            {analysis.excluded.count > 0 && (
+              <p className="note">
+                <strong>{formatCount(analysis.excluded.count, 'structure')} excluded</strong>{' '}
+                ({analysis.excluded.kinds
+                  .slice(0, 3)
+                  .map(([kind, n]) => `man_made=${kind}: ${formatCount(n, 'object')}`)
+                  .join(', ')}
+                {analysis.excluded.kinds.length > 3 ? ', …' : ''}). OSM tags these as buildings,
+                but they are man-made structures (such as memorial stelae or towers), so they
+                are not counted in coverage.
+              </p>
+            )}
+            {analysis.buildingCount > 0 && (
+              <ul className="legend" aria-label="Map legend">
+                <li>
+                  <LegendSwatch colors={BUILDING_COLORS.inside} /> Fully inside
+                </li>
+                <li>
+                  <LegendSwatch colors={BUILDING_COLORS.clipped} /> Part inside the area
+                </li>
+                {analysis.clippedCount > 0 && (
+                  <li>
+                    <LegendSwatch colors={BUILDING_COLORS.clipped} dashed /> Outline outside (not counted)
+                  </li>
+                )}
+              </ul>
+            )}
+            {analysis.buildingCount > 0 && (
+              <p className="hint">Click a building on the map for details.</p>
+            )}
             {formatTimestamp(data.timestamp) && (
               <p className="hint">OSM data as of {formatTimestamp(data.timestamp)}</p>
             )}

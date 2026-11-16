@@ -7,8 +7,15 @@
 // - Ways that are also members of a building relation are skipped, so the
 //   same footprint is never counted twice.
 // - Anything that cannot form valid closed rings is skipped and counted.
+// - Structures tagged man_made=* (e.g. memorial stelae mapped as
+//   building=yes + man_made=stele) are returned separately as excluded.
 //
 // Coordinates are GeoJSON order: [lon, lat].
+
+/** True for OSM objects that are structures rather than buildings. */
+export function isExcludedStructure(tags = {}) {
+  return Boolean(tags.man_made);
+}
 
 const MIN_RING_POINTS = 4; // closed triangle: A, B, C, A
 
@@ -108,18 +115,20 @@ function relationToGeometry(relation) {
 
 /**
  * @param {object[]} elements Overpass JSON `elements` from an `out geom` query
- * @returns {{ features: object[], skipped: number }}
+ * @returns {{ features: object[], excludedFeatures: object[], skipped: number }}
+ *   `features` are buildings; `excludedFeatures` are man_made structures.
  */
 export function osmToBuildingFeatures(elements) {
   const relationMemberWays = new Set();
   for (const element of elements) {
-    if (element.type !== 'relation') continue;
+    if (element.type !== 'relation' || isExcludedStructure(element.tags)) continue;
     for (const member of element.members ?? []) {
       if (member.type === 'way') relationMemberWays.add(member.ref);
     }
   }
 
   const features = [];
+  const excludedFeatures = [];
   let skipped = 0;
 
   for (const element of elements) {
@@ -138,13 +147,14 @@ export function osmToBuildingFeatures(elements) {
       continue;
     }
 
-    features.push({
+    const feature = {
       type: 'Feature',
       id: `${element.type}/${element.id}`,
       properties: { osmType: element.type, osmId: element.id, tags: element.tags ?? {} },
       geometry,
-    });
+    };
+    (isExcludedStructure(element.tags) ? excludedFeatures : features).push(feature);
   }
 
-  return { features, skipped };
+  return { features, excludedFeatures, skipped };
 }

@@ -43,6 +43,8 @@ export default function App() {
           onAreaDrawn={handleAreaDrawn}
           onDrawCancel={cancelDrawing}
           isLoadingBuildings={buildings.status === 'loading'}
+          analysis={analysis}
+          analysisKey={selection ? Object.values(selection.bounds).join(',') : ''}
         />
       </main>
     </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assembleRings, osmToBuildingFeatures, pointInRing } from './osm.js';
+import { assembleRings, isExcludedStructure, osmToBuildingFeatures, pointInRing } from './osm.js';
 
 // Overpass `out geom` points are { lat, lon }.
 const pt = (lon, lat) => ({ lat, lon });
@@ -124,6 +124,45 @@ describe('osmToBuildingFeatures: multipolygon relations', () => {
       relation(20, [member(200, 'outer', outline)]),
     ]);
     expect(features.map((f) => f.id)).toEqual(['relation/20']);
+  });
+});
+
+describe('osmToBuildingFeatures: man_made structures', () => {
+  it('returns building-tagged man_made structures separately as excluded', () => {
+    const { features, excludedFeatures, skipped } = osmToBuildingFeatures([
+      way(300, closedSquare(13.4, 52.5, 0.001)),
+      way(301, closedSquare(13.41, 52.5, 0.00002), { building: 'yes', man_made: 'stele' }),
+    ]);
+    expect(features.map((f) => f.id)).toEqual(['way/300']);
+    expect(excludedFeatures.map((f) => f.id)).toEqual(['way/301']);
+    expect(skipped).toBe(0);
+  });
+
+  it('excludes man_made multipolygon relations too', () => {
+    const { features, excludedFeatures } = osmToBuildingFeatures([
+      relation(30, [member(310, 'outer', closedSquare(13.4, 52.5, 0.001))], {
+        building: 'yes',
+        type: 'multipolygon',
+        man_made: 'tower',
+      }),
+    ]);
+    expect(features).toHaveLength(0);
+    expect(excludedFeatures.map((f) => f.id)).toEqual(['relation/30']);
+  });
+
+  it('still counts a building way that belongs to an excluded relation', () => {
+    const outline = closedSquare(13.4, 52.5, 0.001);
+    const { features } = osmToBuildingFeatures([
+      way(320, outline),
+      relation(32, [member(320, 'outer', outline)], { building: 'yes', type: 'multipolygon', man_made: 'works' }),
+    ]);
+    expect(features.map((f) => f.id)).toEqual(['way/320']);
+  });
+
+  it('isExcludedStructure only matches man_made', () => {
+    expect(isExcludedStructure({ building: 'yes', man_made: 'stele' })).toBe(true);
+    expect(isExcludedStructure({ building: 'roof' })).toBe(false);
+    expect(isExcludedStructure(undefined)).toBe(false);
   });
 });
 

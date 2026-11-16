@@ -65,8 +65,10 @@ export function analyzeCoverage(features, bounds) {
     buildings.push({
       id: feature.id,
       properties: feature.properties,
-      geometry: withoutEmptyParts(clipped.geometry),
+      geometry: withoutEmptyParts(clipped.geometry), // part inside the selection
+      fullGeometry: feature.geometry,
       areaInsideM2,
+      fullAreaM2: inside ? areaInsideM2 : area(feature),
       isClipped: !inside,
     });
   }
@@ -78,5 +80,23 @@ export function analyzeCoverage(features, bounds) {
     buildingCount: buildings.length,
     clippedCount,
     buildings,
+  };
+}
+
+/**
+ * Count excluded man_made structures that actually lie inside the selection,
+ * grouped by their man_made value (most frequent first).
+ * @returns {{ count: number, kinds: Array<[string, number]> }}
+ */
+export function summarizeExclusions(excludedFeatures, bounds) {
+  const { buildings } = analyzeCoverage(excludedFeatures, bounds);
+  const byKind = new Map();
+  for (const { properties } of buildings) {
+    const kind = properties?.tags?.man_made ?? 'unknown';
+    byKind.set(kind, (byKind.get(kind) ?? 0) + 1);
+  }
+  return {
+    count: buildings.length,
+    kinds: [...byKind.entries()].sort((a, b) => b[1] - a[1]),
   };
 }

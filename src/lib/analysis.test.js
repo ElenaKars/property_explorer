@@ -1,6 +1,6 @@
 import area from '@turf/area';
 import { describe, expect, it } from 'vitest';
-import { analyzeCoverage } from './analysis.js';
+import { analyzeCoverage, summarizeExclusions } from './analysis.js';
 import { rectangleArea } from './geometry.js';
 
 // Analysis box in Berlin, about 136 m × 111 m.
@@ -46,6 +46,8 @@ describe('analyzeCoverage', () => {
     expect(result.clippedCount).toBe(1);
     expect(result.buildings[0].isClipped).toBe(true);
     expectArea(result.footprintAreaM2, rectangleArea({ ...b, west: BOX.west }));
+    expectArea(result.buildings[0].fullAreaM2, rectangleArea(b));
+    expect(result.buildings[0].fullGeometry.coordinates[0]).toHaveLength(5);
   });
 
   it('clips a building over a corner to the inside quarter', () => {
@@ -138,6 +140,23 @@ describe('analyzeCoverage', () => {
       result.footprintAreaM2,
       area(result.buildings[0].geometry) + area(result.buildings[1].geometry),
     );
+  });
+
+  it('counts excluded structures inside the box only, grouped by kind', () => {
+    const structure = (id, kind, bounds) => ({
+      ...rect(id, bounds),
+      properties: { tags: { building: 'yes', man_made: kind } },
+    });
+    const summary = summarizeExclusions(
+      [
+        structure('s1', 'stele', { south: 52.5001, west: 13.4001, north: 52.50011, east: 13.40012 }),
+        structure('s2', 'stele', { south: 52.5002, west: 13.4001, north: 52.50021, east: 13.40012 }),
+        structure('t1', 'tower', { south: 52.5003, west: 13.4001, north: 52.50031, east: 13.40012 }),
+        structure('out', 'stele', { south: 52.6, west: 13.5, north: 52.60001, east: 13.50002 }),
+      ],
+      BOX,
+    );
+    expect(summary).toEqual({ count: 3, kinds: [['stele', 2], ['tower', 1]] });
   });
 
   it('returns zero coverage for no buildings', () => {

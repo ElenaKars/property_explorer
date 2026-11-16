@@ -10,6 +10,7 @@ import {
 } from 'react-leaflet';
 import { DEFAULT_CITY, MAP_LIMITS, PLACE_ZOOM, TILE_LAYER } from '../config.js';
 import { toLeafletBounds } from '../lib/geometry.js';
+import BuildingsLayer from './BuildingsLayer.jsx';
 import RectangleTool from './RectangleTool.jsx';
 
 const SELECTION_STYLE = { color: '#2563eb', weight: 2, fillOpacity: 0.06 };
@@ -43,6 +44,8 @@ export default function MapView({
   onAreaDrawn,
   onDrawCancel,
   isLoadingBuildings,
+  analysis,
+  analysisKey,
 }) {
   return (
     <>
@@ -71,6 +74,8 @@ export default function MapView({
             <Popup>{selectedPlace.label}</Popup>
           </Marker>
         )}
+
+        <BuildingsLayer analysis={analysis} dataKey={analysisKey} interactive={!isDrawing} />
 
         {selection && (
           <Rectangle
