@@ -1,6 +1,7 @@
+import AreaPanel from './AreaPanel.jsx';
 import SearchPanel from './SearchPanel.jsx';
 
-export default function Sidebar({ onPlaceSelect, selectedPlaceId }) {
+export default function Sidebar({ onPlaceSelect, selectedPlaceId, area }) {
   return (
     <aside className="sidebar" aria-label="Analysis panel">
       <header className="sidebar__header">
@@ -12,6 +13,8 @@ export default function Sidebar({ onPlaceSelect, selectedPlaceId }) {
 
       <SearchPanel onSelect={onPlaceSelect} selectedId={selectedPlaceId} />
 
+      <AreaPanel {...area} />
+
       <section className="panel" aria-labelledby="how-title">
         <h2 id="how-title" className="panel__title">How it works</h2>
         <ol className="steps">
@@ -19,11 +22,6 @@ export default function Sidebar({ onPlaceSelect, selectedPlaceId }) {
           <li>Draw a rectangle on the map.</li>
           <li>Review footprint area and coverage.</li>
         </ol>
-      </section>
-
-      <section className="panel" aria-labelledby="results-title">
-        <h2 id="results-title" className="panel__title">Analysis</h2>
-        <p className="empty">No area selected yet.</p>
       </section>
 
       <footer className="sidebar__footer">

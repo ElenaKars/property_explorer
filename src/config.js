@@ -34,3 +34,9 @@ export const GEOCODER = {
 
 // Zoom used when focusing a search result that has no bounding box.
 export const PLACE_ZOOM = 17;
+
+export const ANALYSIS = {
+  // Largest rectangle accepted for analysis. Keeps Overpass queries small
+  // and fair to the shared public servers.
+  maxAreaM2: 1_000_000, // 1 km² = 100 ha
+};

@@ -254,6 +254,92 @@ a {
   color: var(--text-muted);
 }
 
+/* ---------- Analysis area ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 0 0 10px;
+}
+
+.stat dt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.stat dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.button--secondary {
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Drawing mode ---------- */
+
+.leaflet-container:focus-visible {
+  outline-offset: -2px;
+}
+
+.leaflet-container.is-drawing {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.map-hint {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 1000;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 100px);
+  padding: 8px 8px 8px 14px;
+  font-size: 0.875rem;
+  color: #fff;
+  background: rgba(28, 36, 48, 0.88);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.map-hint__cancel {
+  padding: 4px 10px;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.map-hint__cancel:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
 /* ---------- Mobile: map on top, panel below ---------- */
 
 @media (max-width: 720px) {
