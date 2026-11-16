@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import MapView from './components/MapView.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import { useBuildingData } from './hooks/useBuildingData.js';
+import { useCoverageAnalysis } from './hooks/useCoverageAnalysis.js';
 import { createSelection } from './lib/selection.js';
 
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [selection, setSelection] = useState(null);
   const buildings = useBuildingData(selection);
+  const analysis = useCoverageAnalysis(selection, buildings);
 
   const startDrawing = useCallback(() => setIsDrawing(true), []);
   const cancelDrawing = useCallback(() => setIsDrawing(false), []);
@@ -31,6 +33,7 @@ export default function App() {
           onClear: clearSelection,
         }}
         buildings={buildings}
+        analysis={analysis}
       />
       <main className="layout__map">
         <MapView

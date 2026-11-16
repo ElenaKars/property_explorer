@@ -1,6 +1,6 @@
-import { formatCount, formatTimestamp } from '../lib/format.js';
+import { formatArea, formatCount, formatPercent, formatTimestamp } from '../lib/format.js';
 
-export default function ResultsPanel({ selection, buildings }) {
+export default function ResultsPanel({ selection, buildings, analysis }) {
   if (!selection || selection.error) return null;
 
   const { status, data, error, retry } = buildings;
@@ -31,10 +31,25 @@ export default function ResultsPanel({ selection, buildings }) {
           </>
         )}
 
-        {status === 'success' && data && (
+        {status === 'success' && data && analysis && (
           <>
-            <p className="result-summary">
-              {formatCount(data.elements.length, 'building outline')} received.
+            <dl className="stats">
+              <div className="stat">
+                <dt>Building coverage</dt>
+                <dd>{formatPercent(analysis.coverageRatio)}</dd>
+              </div>
+              <div className="stat">
+                <dt>Footprint area</dt>
+                <dd>{formatArea(analysis.footprintAreaM2)}</dd>
+              </div>
+            </dl>
+            <p className="hint">
+              {formatCount(analysis.buildingCount, 'building')} in the area
+              {analysis.clippedCount > 0 &&
+                `, ${analysis.clippedCount} cut at the boundary (only the part inside counts)`}
+              .
+              {analysis.skipped > 0 &&
+                ` ${formatCount(analysis.skipped, 'outline')} skipped because the OSM geometry is incomplete.`}
             </p>
             {formatTimestamp(data.timestamp) && (
               <p className="hint">OSM data as of {formatTimestamp(data.timestamp)}</p>

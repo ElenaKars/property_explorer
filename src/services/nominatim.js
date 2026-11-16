@@ -82,6 +82,7 @@ export async function searchPlaces(query, { signal } = {}) {
   if (cache.has(key)) return cache.get(key);
 
   await reserveSlot(signal);
+  signal?.throwIfAborted(); // cancelled before the request was sent
 
   const params = new URLSearchParams({
     q,

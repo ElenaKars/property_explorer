@@ -2,7 +2,7 @@ import AreaPanel from './AreaPanel.jsx';
 import ResultsPanel from './ResultsPanel.jsx';
 import SearchPanel from './SearchPanel.jsx';
 
-export default function Sidebar({ onPlaceSelect, selectedPlaceId, area, buildings }) {
+export default function Sidebar({ onPlaceSelect, selectedPlaceId, area, buildings, analysis }) {
   return (
     <aside className="sidebar" aria-label="Analysis panel">
       <header className="sidebar__header">
@@ -16,7 +16,7 @@ export default function Sidebar({ onPlaceSelect, selectedPlaceId, area, building
 
       <AreaPanel {...area} />
 
-      <ResultsPanel selection={area.selection} buildings={buildings} />
+      <ResultsPanel selection={area.selection} buildings={buildings} analysis={analysis} />
 
       <section className="panel" aria-labelledby="how-title">
         <h2 id="how-title" className="panel__title">How it works</h2>

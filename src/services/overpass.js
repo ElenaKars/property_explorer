@@ -165,6 +165,7 @@ export async function fetchBuildings(bounds, { signal } = {}) {
     }
 
     await reserveSlot(signal);
+    signal?.throwIfAborted(); // cancelled before the request was sent
 
     try {
       const result = { ...(await queryEndpoint(endpoint, query, signal)), source: endpoint.name };

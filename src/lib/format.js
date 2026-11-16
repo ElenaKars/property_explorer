@@ -28,6 +28,13 @@ export function formatTimestamp(iso) {
   return `${dateTime.format(date)} UTC`;
 }
 
+const percent = new Intl.NumberFormat(LOCALE, { style: 'percent', maximumFractionDigits: 1 });
+
+/** 0.3421 -> "34.2%" */
+export function formatPercent(ratio) {
+  return percent.format(ratio);
+}
+
 /** "1 building" / "12 buildings" */
 export function formatCount(n, singular, plural = `${singular}s`) {
   return `${whole.format(n)} ${n === 1 ? singular : plural}`;

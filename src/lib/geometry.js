@@ -1,9 +1,11 @@
 // Geometry helpers. Bounds are plain objects: { south, west, north, east }
 // in WGS84 degrees.
 
-// Same sphere radius as @turf/area, so rectangle and building areas are
-// computed on a consistent basis.
-export const EARTH_RADIUS_M = 6378137;
+import { earthRadius } from '@turf/helpers';
+
+// Same sphere as @turf/area (mean Earth radius, 6,371,008.8 m), so rectangle
+// and building areas are computed on a consistent basis.
+export const EARTH_RADIUS_M = earthRadius;
 
 const toRad = (deg) => (deg * Math.PI) / 180;
 
