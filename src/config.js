@@ -40,3 +40,26 @@ export const ANALYSIS = {
   // and fair to the shared public servers.
   maxAreaM2: 1_000_000, // 1 km² = 100 ha
 };
+
+// Overpass API instances, tried in order. Only a retryable failure (busy,
+// server error, timeout, network) moves on to the next one; requests are
+// never sent in parallel. See https://wiki.openstreetmap.org/wiki/Overpass_API
+export const OVERPASS = {
+  endpoints: [
+    {
+      name: 'Overpass Europe (dresel.systems)',
+      url: 'https://ovp.dresel.systems/api/interpreter',
+      // This instance only holds European data.
+      coverage: { south: 34, west: -25, north: 72, east: 45 },
+    },
+    {
+      name: 'Overpass main instance (overpass-api.de)',
+      url: 'https://overpass-api.de/api/interpreter',
+      coverage: null, // worldwide
+    },
+  ],
+  serverTimeoutSec: 25, // [timeout:…] sent with the query
+  requestTimeoutMs: 45000, // includes time waiting in the server's queue
+  minIntervalMs: 1000,
+  cooldownMs: 30000, // pause an instance after HTTP 429/406, per its policy
+};

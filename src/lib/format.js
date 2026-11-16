@@ -15,6 +15,24 @@ export function formatArea(m2) {
   return m2 >= 10_000 ? `${base} (${upToTwoDecimals.format(m2 / 10_000)} ha)` : base;
 }
 
+const dateTime = new Intl.DateTimeFormat(LOCALE, {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'UTC',
+});
+
+/** ISO timestamp -> "16 Nov 2026, 10:50 UTC" (null for missing/invalid input). */
+export function formatTimestamp(iso) {
+  const date = iso ? new Date(iso) : null;
+  if (!date || Number.isNaN(date.getTime())) return null;
+  return `${dateTime.format(date)} UTC`;
+}
+
+/** "1 building" / "12 buildings" */
+export function formatCount(n, singular, plural = `${singular}s`) {
+  return `${whole.format(n)} ${n === 1 ? singular : plural}`;
+}
+
 /** "420 m" or "1.25 km" */
 export function formatDistance(m) {
   return m >= 1000 ? `${twoDecimals.format(m / 1000)} km` : `${whole.format(m)} m`;

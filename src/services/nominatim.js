@@ -8,10 +8,11 @@
 // - display attribution               -> shown next to the search form
 
 import { GEOCODER } from '../config.js';
+import { createThrottle } from '../lib/throttle.js';
 
 const MAX_CACHE_ENTRIES = 50;
 const cache = new Map();
-let nextFreeSlot = 0;
+const reserveSlot = createThrottle(GEOCODER.minIntervalMs);
 
 export class GeocodeError extends Error {
   constructor(message, { status, cause } = {}) {
@@ -19,33 +20,6 @@ export class GeocodeError extends Error {
     this.name = 'GeocodeError';
     this.status = status;
   }
-}
-
-function wait(ms, signal) {
-  return new Promise((resolve, reject) => {
-    if (signal?.aborted) {
-      reject(signal.reason);
-      return;
-    }
-    const timer = setTimeout(resolve, ms);
-    signal?.addEventListener(
-      'abort',
-      () => {
-        clearTimeout(timer);
-        reject(signal.reason);
-      },
-      { once: true },
-    );
-  });
-}
-
-// Reserve the next request slot so consecutive calls are spaced out,
-// even when several are fired in quick succession.
-async function reserveSlot(signal) {
-  const now = Date.now();
-  const start = Math.max(now, nextFreeSlot);
-  nextFreeSlot = start + GEOCODER.minIntervalMs;
-  if (start > now) await wait(start - now, signal);
 }
 
 function normalizeQuery(query) {

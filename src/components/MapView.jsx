@@ -42,6 +42,7 @@ export default function MapView({
   isDrawing,
   onAreaDrawn,
   onDrawCancel,
+  isLoadingBuildings,
 }) {
   return (
     <>
@@ -81,6 +82,13 @@ export default function MapView({
 
         <RectangleTool active={isDrawing} onComplete={onAreaDrawn} onCancel={onDrawCancel} />
       </MapContainer>
+
+      {isLoadingBuildings && !isDrawing && (
+        <div className="map-hint" aria-hidden="true">
+          <span className="spinner spinner--light" />
+          <span>Loading buildings…</span>
+        </div>
+      )}
 
       {isDrawing && (
         <div className="map-hint" role="status">
