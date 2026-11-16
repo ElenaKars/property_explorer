@@ -20,3 +20,17 @@ export const TILE_LAYER = {
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   maxZoom: 19,
 };
+
+// Nominatim geocoding. Policy: https://operations.osmfoundation.org/policies/nominatim/
+export const GEOCODER = {
+  endpoint: 'https://nominatim.openstreetmap.org/search',
+  countryCodes: 'de',
+  language: 'de,en',
+  resultLimit: 5,
+  minQueryLength: 3,
+  minIntervalMs: 1100, // policy maximum is 1 request/second; keep a margin
+  timeoutMs: 10000,
+};
+
+// Zoom used when focusing a search result that has no bounding box.
+export const PLACE_ZOOM = 17;

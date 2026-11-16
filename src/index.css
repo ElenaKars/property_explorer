@@ -112,6 +112,148 @@ ol {
   font-size: 0.9rem;
 }
 
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Search ---------- */
+
+.search {
+  display: flex;
+  gap: 8px;
+}
+
+.search__input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.search__input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+
+.button {
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 550;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.search__status:not(:empty) {
+  margin-top: 10px;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.message--error {
+  padding: 8px 10px;
+  color: #9f1239;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+}
+
+.results {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.result {
+  display: grid;
+  width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result:hover {
+  background: var(--bg);
+}
+
+.result--active {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.result__name {
+  font-weight: 550;
+}
+
+.result__kind {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  vertical-align: 1px;
+}
+
+.result__detail {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.credit {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 /* ---------- Mobile: map on top, panel below ---------- */
 
 @media (max-width: 720px) {

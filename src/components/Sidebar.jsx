@@ -1,4 +1,6 @@
-export default function Sidebar() {
+import SearchPanel from './SearchPanel.jsx';
+
+export default function Sidebar({ onPlaceSelect, selectedPlaceId }) {
   return (
     <aside className="sidebar" aria-label="Analysis panel">
       <header className="sidebar__header">
@@ -7,6 +9,8 @@ export default function Sidebar() {
           Building footprint coverage from OpenStreetMap data
         </p>
       </header>
+
+      <SearchPanel onSelect={onPlaceSelect} selectedId={selectedPlaceId} />
 
       <section className="panel" aria-labelledby="how-title">
         <h2 id="how-title" className="panel__title">How it works</h2>
